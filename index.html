@@ -68,7 +68,7 @@ ul{list-style:none;padding:0;}
 .bio-top{margin-bottom:64px;text-align:right;padding:0 var(--sp);}
 .bio-headline{font-size:clamp(2.4rem,4vw,4.4rem);font-weight:800;letter-spacing:-0.04em;color:var(--w);line-height:0.9;}
 .bio-blocks{}
-.bio-block{display:flex;flex-direction:row;align-items:center;gap:72px;padding:40px var(--sp) 80px;min-height:auto;}
+.bio-block{display:flex;flex-direction:row;align-items:center;gap:72px;padding:40px var(--sp) 52px;min-height:auto;}
 .bio-block:nth-child(even){flex-direction:row-reverse;}
 .bio-block-photo{position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .bio-photo-slot{position:relative;width:320px;aspect-ratio:3/4;background:var(--ink3);overflow:hidden;border-radius:var(--r);box-shadow:0 24px 64px rgba(0,0,0,0.6);flex-shrink:0;}
@@ -76,8 +76,8 @@ ul{list-style:none;padding:0;}
 .bio-photo-slot::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,0.95) 0%,rgba(8,8,8,0.70) 30%,rgba(8,8,8,0.25) 60%,transparent 85%);z-index:2;pointer-events:none;}
 .bio-photo-slot img{width:100%;height:100%;object-fit:cover;object-position:top center;position:absolute;inset:0;filter:none;mix-blend-mode:normal;display:block;}
 .bio-block-text{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;}
-.bio-body{font-size:clamp(0.88rem,1.2vw,1rem);font-weight:300;color:rgba(240,240,240,0.48);line-height:2.1;margin-bottom:22px;}
-.bio-tools{margin-top:52px;padding-top:36px;border-top:1px solid var(--bd);}
+.bio-body{font-size:clamp(0.98rem,1.3vw,1.1rem);font-weight:300;color:rgba(240,240,240,0.48);line-height:2.1;margin-bottom:22px;}
+.bio-tools{margin-top:36px;padding-top:24px;border-top:1px solid var(--bd);}
 .bio-tools-label{font-size:0.6rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--ind);margin-bottom:16px;}
 .bio-tools-grid{display:flex;flex-wrap:wrap;gap:8px;}
 .bio-tool{font-size:0.78rem;font-weight:300;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-pill);color:rgba(240,240,240,0.55);}
@@ -93,11 +93,11 @@ ul{list-style:none;padding:0;}
 
 /* PROJECTS */
 .projects{padding:var(--spy) var(--sp);}
-.proj-section-header{text-align:right;margin-bottom:72px;}
+.proj-section-header{text-align:right;margin-bottom:48px;}
 .proj-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:72px 36px;
+  gap:52px 32px;
   width:100%;
 }
 .proj-grid .proj-item:last-child:nth-child(3n+1){grid-column:1;}
@@ -112,24 +112,24 @@ ul{list-style:none;padding:0;}
 .proj-item-meta{display:flex;justify-content:space-between;align-items:center;}
 .proj-item-num{font-size:0.58rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--ind);}
 .proj-item-tag{font-size:0.56rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;background:rgba(93,95,239,0.08);border:1px solid rgba(93,95,239,0.2);color:rgba(93,95,239,0.7);border-radius:var(--r-pill);}
-.proj-item-title{font-size:clamp(0.8rem,1vw,0.9rem);font-weight:600;color:rgba(240,240,240,.82);line-height:1.3;transition:color .2s;}
+.proj-item-title{font-size:clamp(0.9rem,1.1vw,1rem);font-weight:600;color:rgba(240,240,240,.82);line-height:1.3;transition:color .2s;}
 .proj-item:hover .proj-item-title{color:var(--w);}
-.proj-item-desc{font-size:clamp(0.68rem,0.9vw,0.78rem);font-weight:300;color:rgba(240,240,240,.35);line-height:1.6;}
+.proj-item-desc{font-size:clamp(0.78rem,1vw,0.88rem);font-weight:300;color:rgba(240,240,240,.35);line-height:1.6;}
 
 /* CAREER */
 .career{padding:var(--spy) var(--sp);}
 .career-two-col{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
 .career-headline{font-size:clamp(2.4rem,4vw,4.4rem);font-weight:800;letter-spacing:-0.04em;color:var(--w);line-height:0.9;}
 .career-intro{display:flex;flex-direction:column;gap:24px;padding-top:12px;position:sticky;top:140px;align-self:start;}
-.career-intro-text{font-size:clamp(0.86rem,1.1vw,0.95rem);font-weight:300;color:var(--muted);line-height:1.9;padding-top:4px;border-top:1px solid var(--bd);}
+.career-intro-text{font-size:clamp(0.94rem,1.2vw,1.05rem);font-weight:300;color:var(--muted);line-height:1.9;padding-top:4px;border-top:1px solid var(--bd);}
 .career-steps{display:flex;flex-direction:column;}
 .career-step{display:grid;grid-template-columns:72px 1fr;gap:32px;padding:72px 0;border-top:1px solid var(--bd);align-items:start;}
 .cs-num{font-size:0.6rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--ind);padding-top:5px;white-space:nowrap;}
 .cs-content{}
 .cs-title{font-size:clamp(1rem,1.6vw,1.4rem);font-weight:600;letter-spacing:-0.02em;color:var(--w);line-height:1.25;margin-bottom:12px;}
-.cs-body{font-size:clamp(0.76rem,1vw,0.86rem);font-weight:300;color:rgba(240,240,240,0.42);line-height:1.82;margin-bottom:14px;}
+.cs-body{font-size:clamp(0.86rem,1.1vw,0.96rem);font-weight:300;color:rgba(240,240,240,0.42);line-height:1.82;margin-bottom:14px;}
 .cs-items{display:flex;flex-direction:column;gap:0;margin-top:8px;}
-.cs-item{font-size:0.85rem;font-weight:300;color:rgba(240,240,240,.38);padding:16px 0 16px 20px;position:relative;border-bottom:1px solid rgba(240,240,240,0.05);line-height:1.5;}
+.cs-item{font-size:0.92rem;font-weight:300;color:rgba(240,240,240,.38);padding:16px 0 16px 20px;position:relative;border-bottom:1px solid rgba(240,240,240,0.05);line-height:1.5;}
 .cs-item:last-child{border-bottom:none;}
 .cs-item::before{content:'';position:absolute;left:0;top:50%;width:8px;height:1px;background:var(--ind);opacity:.5;transform:translateY(-50%);}
 
@@ -138,7 +138,7 @@ ul{list-style:none;padding:0;}
 .contact-footer::before{content:'';position:absolute;width:500px;height:500px;bottom:-100px;right:-60px;border-radius:50%;background:radial-gradient(circle,rgba(93,95,239,0.08),transparent 68%);filter:blur(60px);pointer-events:none;}
 .cf-top{padding-bottom:80px;}
 .cf-logo{font-size:1.4rem;font-weight:700;letter-spacing:-0.03em;color:var(--w);margin-bottom:10px;}
-.cf-tagline{font-size:clamp(0.86rem,1.1vw,0.95rem);font-weight:300;color:rgba(240,240,240,.38);line-height:1.7;max-width:36ch;}
+.cf-tagline{font-size:clamp(0.94rem,1.2vw,1.05rem);font-weight:300;color:rgba(240,240,240,.38);line-height:1.7;max-width:36ch;}
 .cf-divider{height:1px;background:var(--bd);}
 .cf-bottom{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;padding:72px 0 80px;}
 .cf-info-label{font-size:0.6rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,240,240,0.28);margin-bottom:10px;}
@@ -218,7 +218,7 @@ a.cf-info-value:hover{color:var(--w);}
 .pm-num{font-size:0.6rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ind);}
 .pm-tag{font-size:0.6rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;background:rgba(93,95,239,0.1);border:1px solid rgba(93,95,239,0.25);color:rgba(93,95,239,0.8);border-radius:var(--r-pill);}
 .pm-title{font-size:clamp(1.4rem,3vw,2.2rem);font-weight:800;letter-spacing:-0.03em;color:var(--w);line-height:1.1;margin-bottom:20px;}
-.pm-desc{font-size:0.92rem;font-weight:300;color:rgba(240,240,240,0.55);line-height:1.9;margin-bottom:32px;}
+.pm-desc{font-size:1rem;font-weight:300;color:rgba(240,240,240,0.55);line-height:1.9;margin-bottom:32px;}
 .pm-details{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-top:28px;border-top:1px solid var(--bd);}
 .pm-detail-item{}
 .pm-detail-label{font-size:0.58rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ind);margin-bottom:8px;}
@@ -328,46 +328,40 @@ a.cf-info-value:hover{color:var(--w);}
   </div>
   <div class="proj-grid">
     <div class="proj-item reveal" data-proj="0">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb1"></div></div>
+      <div class="proj-thumb"><div class="proj-thumb-bg ptb1"></div><img src="assets/projectlist_01.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
       <div class="proj-item-meta"><span class="proj-item-num">01</span><span class="proj-item-tag">Branding</span></div>
       <p class="proj-item-title">미림마이스터고 패턴 디자인 제작</p>
       <p class="proj-item-desc">Mar 2025 – Jun 2025</p>
     </div>
     <div class="proj-item reveal d1" data-proj="1">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb2"></div></div>
+      <div class="proj-thumb"><div class="proj-thumb-bg ptb2"></div><img src="assets/projectlist_02.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
       <div class="proj-item-meta"><span class="proj-item-num">02</span><span class="proj-item-tag">Illustration</span></div>
       <p class="proj-item-title">나를 주제로 아트워크 제작하기</p>
       <p class="proj-item-desc">Jun 2025</p>
     </div>
     <div class="proj-item reveal d2" data-proj="2">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb3"></div></div>
+      <div class="proj-thumb"><div class="proj-thumb-bg ptb3"></div><img src="assets/projectlist_03.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
       <div class="proj-item-meta"><span class="proj-item-num">03</span><span class="proj-item-tag">Visual Design</span></div>
       <p class="proj-item-title">어바웃타임 픽토그램 및 포스터 제작</p>
       <p class="proj-item-desc">Aug 2025 – Nov 2025</p>
     </div>
     <div class="proj-item reveal d1" data-proj="3">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb4"></div></div>
+      <div class="proj-thumb"><div class="proj-thumb-bg ptb4"></div><img src="assets/projectlist_04.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
       <div class="proj-item-meta"><span class="proj-item-num">04</span><span class="proj-item-tag">UI Design</span></div>
       <p class="proj-item-title">캘린더 GUI style별 아이콘 제작</p>
       <p class="proj-item-desc">Oct 2025 – Nov 2025</p>
     </div>
     <div class="proj-item reveal d2" data-proj="4">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb1"></div></div>
+      <div class="proj-thumb"><div class="proj-thumb-bg ptb1"></div><img src="assets/projectlist_05.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
       <div class="proj-item-meta"><span class="proj-item-num">05</span><span class="proj-item-tag">Project</span></div>
       <p class="proj-item-title">FacuCat 제작</p>
       <p class="proj-item-desc">Oct 2025 – Dec 2025</p>
     </div>
     <div class="proj-item reveal d3" data-proj="5">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb2"></div></div>
+      <div class="proj-thumb"><div class="proj-thumb-bg ptb2"></div><img src="assets/projectlist_06.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
       <div class="proj-item-meta"><span class="proj-item-num">06</span><span class="proj-item-tag">Competition</span></div>
       <p class="proj-item-title">미톤 참여 및 Donut 제작</p>
       <p class="proj-item-desc">Oct 24 – 25, 2025</p>
-    </div>
-    <div class="proj-item reveal d1" data-proj="6">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb3"></div></div>
-      <div class="proj-item-meta"><span class="proj-item-num">07</span><span class="proj-item-tag">Service Design</span></div>
-      <p class="proj-item-title">넷플릭스 OTT 디자인 서비스 제작</p>
-      <p class="proj-item-desc">Feb 2026</p>
     </div>
   </div>
 </section>
@@ -486,13 +480,12 @@ window.addEventListener('load',()=>{initOrbit('valOrbit');});
 // ── Project Modal
 document.addEventListener('DOMContentLoaded', function(){
 const PROJECTS = [
-  {num:'01',tag:'Branding',bg:'ptb1',title:'미림마이스터고 패턴 디자인 제작',desc:'미림마이스터고등학교의 아이덴티티를 반영한 패턴 디자인 수행평가 작업입니다. 학교의 핵심 가치와 비전을 시각적 패턴으로 확장해 다양한 매체에 활용 가능한 브랜딩 에셋을 제작했습니다.',details:[{label:'기간',value:'March 2025 – June 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'브랜딩 · 패턴 디자인'},{label:'도구',value:'Illustrator · InDesign'}]},
-  {num:'02',tag:'Illustration',bg:'ptb2',title:'나를 주제로 아트워크 제작하기',desc:'자기 자신을 주제로 한 아트워크 제작 수행평가입니다. 개인의 정체성과 감성을 시각 언어로 표현하며 일러스트레이션 역량을 쌓았습니다.',details:[{label:'기간',value:'June 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'일러스트레이션 · 아트워크'},{label:'도구',value:'Illustrator · Photoshop'}]},
-  {num:'03',tag:'Visual Design',bg:'ptb3',title:'어바웃타임 픽토그램 및 포스터 제작',desc:'어바웃타임을 주제로 픽토그램과 포스터를 제작한 수행평가입니다. 감성적 주제를 시각 언어로 번역하며 포스터 디자인 역량을 향상시켰습니다.',details:[{label:'기간',value:'August – November 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'픽토그램 · 포스터 디자인'},{label:'도구',value:'Illustrator · Photoshop'}]},
-  {num:'04',tag:'UI Design',bg:'ptb4',title:'캘린더 GUI style별 아이콘 제작',desc:'Material, Fluent, Cupertino 등 다양한 GUI 스타일에 맞춘 캘린더 아이콘 시스템을 설계·제작한 수행평가입니다. 일관된 시각 언어로 직관적인 사용자 경험을 목표로 했습니다.',details:[{label:'기간',value:'October – November 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'아이콘 디자인 · UI 디자인'},{label:'도구',value:'Figma · Illustrator'}]},
-  {num:'05',tag:'Project',bg:'ptb1',title:'FacuCat 제작',desc:'교내 동아리 활동으로 진행한 FacuCat 프로젝트입니다. 디자인 전반을 담당하며 팀 협업 환경에서 실제 서비스 아이디어를 구조화하고 화면을 함께 설계했습니다.',details:[{label:'기간',value:'October – December 2025'},{label:'분류',value:'교내 동아리 프로젝트'},{label:'분야',value:'UI/UX 디자인 · 서비스 기획'},{label:'도구',value:'Figma · Notion'}]},
-  {num:'06',tag:'Competition',bg:'ptb2',title:'미톤 참여 및 Donut 제작',desc:'교외 동아리 대회인 미톤에 참여하여 Donut 프로젝트를 기획·제작했습니다. 단기간의 집중 작업을 통해 아이디어 구상부터 시각화까지 전 과정을 경험했습니다.',details:[{label:'기간',value:'October 24–25, 2025'},{label:'분류',value:'교외 동아리 대회'},{label:'분야',value:'서비스 기획 · 비주얼 디자인'},{label:'도구',value:'Figma · Illustrator'}]},
-  {num:'07',tag:'Service Design',bg:'ptb3',title:'넷플릭스 OTT 디자인 서비스 제작',desc:'넷플릭스 OTT 서비스를 주제로 한 UI/UX 디자인 수행평가·프로젝트입니다. 실제 서비스를 분석하고 개선된 UI를 설계하며 서비스 디자인 프로세스를 경험했습니다.',details:[{label:'기간',value:'February 2026'},{label:'분류',value:'교내 수행평가 · 프로젝트'},{label:'분야',value:'UI/UX · 서비스 디자인'},{label:'도구',value:'Figma · Notion'}]},
+  {num:'01',tag:'Branding',bg:'ptb1',img:'assets/projectlist_01.png',title:'미림마이스터고 패턴 디자인 제작',desc:'미림마이스터고등학교의 아이덴티티를 반영한 패턴 디자인 수행평가 작업입니다. 학교의 핵심 가치와 비전을 시각적 패턴으로 확장해 다양한 매체에 활용 가능한 브랜딩 에셋을 제작했습니다.',details:[{label:'기간',value:'March 2025 – June 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'브랜딩 · 패턴 디자인'},{label:'도구',value:'Illustrator · InDesign'}]},
+  {num:'02',tag:'Illustration',bg:'ptb2',img:'assets/projectlist_02.png',title:'나를 주제로 아트워크 제작하기',desc:'자기 자신을 주제로 한 아트워크 제작 수행평가입니다. 개인의 정체성과 감성을 시각 언어로 표현하며 일러스트레이션 역량을 쌓았습니다.',details:[{label:'기간',value:'June 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'일러스트레이션 · 아트워크'},{label:'도구',value:'Illustrator · Photoshop'}]},
+  {num:'03',tag:'Visual Design',bg:'ptb3',img:'assets/projectlist_03.png',title:'어바웃타임 픽토그램 및 포스터 제작',desc:'어바웃타임을 주제로 픽토그램과 포스터를 제작한 수행평가입니다. 감성적 주제를 시각 언어로 번역하며 포스터 디자인 역량을 향상시켰습니다.',details:[{label:'기간',value:'August – November 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'픽토그램 · 포스터 디자인'},{label:'도구',value:'Illustrator · Photoshop'}]},
+  {num:'04',tag:'UI Design',bg:'ptb4',img:'assets/projectlist_04.png',title:'캘린더 GUI style별 아이콘 제작',desc:'Material, Fluent, Cupertino 등 다양한 GUI 스타일에 맞춘 캘린더 아이콘 시스템을 설계·제작한 수행평가입니다. 일관된 시각 언어로 직관적인 사용자 경험을 목표로 했습니다.',details:[{label:'기간',value:'October – November 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'아이콘 디자인 · UI 디자인'},{label:'도구',value:'Figma · Illustrator'}]},
+  {num:'05',tag:'Project',bg:'ptb1',img:'aassets/projectlist_05.png',title:'FacuCat 제작',desc:'교내 동아리 활동으로 진행한 FacuCat 프로젝트입니다. 디자인 전반을 담당하며 팀 협업 환경에서 실제 서비스 아이디어를 구조화하고 화면을 함께 설계했습니다.',details:[{label:'기간',value:'October – December 2025'},{label:'분류',value:'교내 동아리 프로젝트'},{label:'분야',value:'UI/UX 디자인 · 서비스 기획'},{label:'도구',value:'Figma · Notion'}]},
+  {num:'06',tag:'Competition',bg:'ptb2',img:'assets/projectlist_06.png',title:'미톤 참여 및 Donut 제작',desc:'교외 동아리 대회인 미톤에 참여하여 Donut 프로젝트를 기획·제작했습니다. 단기간의 집중 작업을 통해 아이디어 구상부터 시각화까지 전 과정을 경험했습니다.',details:[{label:'기간',value:'October 24–25, 2025'},{label:'분류',value:'교외 동아리 대회'},{label:'분야',value:'서비스 기획 · 비주얼 디자인'},{label:'도구',value:'Figma · Illustrator'}]},
 ];
 
 const overlay  = document.getElementById('projModal');
@@ -502,6 +495,8 @@ function openModal(idx){
   const p = PROJECTS[idx];
   if(!p) return;
   document.getElementById('pmThumbBg').className = 'pm-thumb-bg ' + p.bg;
+  const pmImg = document.getElementById('pmThumbImg');
+  if(p.img){ pmImg.src = p.img; pmImg.style.display='block'; } else { pmImg.src=''; pmImg.style.display='none'; }
   document.getElementById('pmNum').textContent   = p.num;
   document.getElementById('pmTag').textContent   = p.tag;
   document.getElementById('pmTitle').textContent = p.title;
@@ -541,6 +536,7 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
     </button>
     <div class="pm-thumb">
       <div class="pm-thumb-bg" id="pmThumbBg"></div>
+      <img id="pmThumbImg" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:none;">
     </div>
     <div class="pm-body">
       <div class="pm-meta">
