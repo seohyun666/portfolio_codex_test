@@ -1,0 +1,12 @@
+[build]
+  functions = "netlify/functions"
+
+[[headers]]
+  for = "/admin"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/data/projects.json"
+  [headers.values]
+    Cache-Control = "no-cache"

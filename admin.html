@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin — Choi Seo-hyun Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #080808;
+      --ink2: #0f0f0f;
+      --ink3: #141414;
+      --bd: #1e1e1e;
+      --ind: #5d5fef;
+      --w: #f0f0f0;
+      --muted: #666;
+      --r: 12px;
+    }
+    body { background: var(--ink); color: var(--w); font-family: 'Pretendard', sans-serif; font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .login-box {
+      width: 100%; max-width: 360px; background: var(--ink2); border: 1px solid var(--bd);
+      border-radius: var(--r); padding: 40px 36px;
+    }
+    .login-logo { font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; color: var(--w); margin-bottom: 8px; }
+    .login-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 32px; }
+    .login-box input[type="password"] {
+      width: 100%; background: var(--ink3); border: 1px solid var(--bd); border-radius: 8px;
+      padding: 12px 16px; font-family: inherit; font-size: 0.9rem; color: var(--w);
+      outline: none; transition: border-color .2s; margin-bottom: 12px;
+    }
+    .login-box input[type="password"]:focus { border-color: var(--ind); }
+    .btn-primary {
+      width: 100%; background: var(--ind); color: #fff; border: none; border-radius: 8px;
+      padding: 12px; font-family: inherit; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; transition: opacity .2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .login-err { font-size: 0.78rem; color: #e05; margin-top: 10px; display: none; }
+
+    /* ── ADMIN UI ── */
+    #adminScreen { display: none; }
+    .admin-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--ink); border-bottom: 1px solid var(--bd);
+      padding: 16px 40px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-nav-logo { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; }
+    .admin-nav-right { display: flex; gap: 12px; align-items: center; }
+    .btn-save {
+      background: var(--ind); color: #fff; border: none; border-radius: 8px;
+      padding: 8px 20px; font-family: inherit; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: opacity .2s;
+    }
+    .btn-save:hover { opacity: 0.85; }
+    .btn-add {
+      background: transparent; color: var(--w); border: 1px solid var(--bd); border-radius: 8px;
+      padding: 8px 20px; font-family: inherit; font-size: 0.82rem;
+      cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .btn-add:hover { border-color: var(--ind); color: var(--ind); }
+    .btn-logout {
+      background: none; border: none; color: var(--muted); font-family: inherit;
+      font-size: 0.78rem; cursor: pointer; transition: color .2s;
+    }
+    .btn-logout:hover { color: var(--w); }
+
+    .admin-body { max-width: 900px; margin: 0 auto; padding: 48px 40px; }
+    .admin-title { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .admin-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 40px; }
+
+    /* ── PROJECT CARDS ── */
+    #projectList { display: flex; flex-direction: column; gap: 20px; }
+    .proj-card {
+      background: var(--ink2); border: 1px solid var(--bd); border-radius: var(--r);
+      padding: 28px 32px; transition: border-color .2s;
+    }
+    .proj-card:hover { border-color: #2a2a2a; }
+    .proj-card-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+    }
+    .proj-card-num { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; color: var(--ind); }
+    .btn-delete {
+      background: none; border: none; color: #444; font-size: 1.1rem; cursor: pointer;
+      transition: color .2s; line-height: 1; padding: 4px 8px; border-radius: 6px;
+    }
+    .btn-delete:hover { color: #e05; background: rgba(238,0,85,.08); }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .field-row.full { grid-template-columns: 1fr; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ind); }
+    .field input, .field textarea, .field select {
+      background: var(--ink3); border: 1px solid var(--bd); border-radius: 8px;
+      padding: 10px 14px; font-family: inherit; font-size: 0.88rem; color: var(--w);
+      outline: none; transition: border-color .2s; resize: vertical;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--ind); }
+    .field textarea { min-height: 80px; }
+
+    .details-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; margin-top: 8px; }
+    .detail-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 10px; }
+    .detail-row input {
+      background: var(--ink3); border: 1px solid var(--bd); border-radius: 8px;
+      padding: 8px 12px; font-family: inherit; font-size: 0.84rem; color: var(--w);
+      outline: none; transition: border-color .2s;
+    }
+    .detail-row input:focus { border-color: var(--ind); }
+
+    /* PDF 업로드 */
+    .pdf-area {
+      border: 1px dashed var(--bd); border-radius: 8px; padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .pdf-area-label { font-size: 0.8rem; color: var(--muted); }
+    .pdf-url-display { font-size: 0.78rem; color: var(--ind); word-break: break-all; }
+    .btn-pdf {
+      flex-shrink: 0; background: transparent; border: 1px solid var(--bd); border-radius: 6px;
+      padding: 6px 14px; font-family: inherit; font-size: 0.78rem; color: var(--w);
+      cursor: pointer; transition: border-color .2s;
+    }
+    .btn-pdf:hover { border-color: var(--ind); }
+
+    /* 상태 토스트 */
+    #toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: #1a1a2e; border: 1px solid var(--ind); border-radius: 40px;
+      padding: 12px 28px; font-size: 0.84rem; color: var(--w);
+      transition: transform .3s cubic-bezier(.16,1,.3,1), opacity .3s;
+      opacity: 0; pointer-events: none; z-index: 999; white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #toast.error { border-color: #e05; background: #1e0a12; }
+
+    /* 저장 스피너 */
+    .saving { opacity: 0.6; pointer-events: none; }
+
+    @media(max-width: 600px) {
+      .admin-body { padding: 32px 20px; }
+      .field-row { grid-template-columns: 1fr; }
+      .admin-nav { padding: 14px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── 로그인 화면 ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <p class="login-logo">CSH · ADMIN</p>
+    <p class="login-sub">포트폴리오 관리자 페이지</p>
+    <input type="password" id="pwInput" placeholder="비밀번호 입력" autocomplete="current-password"/>
+    <button class="btn-primary" onclick="doLogin()">로그인</button>
+    <p class="login-err" id="loginErr">비밀번호가 올바르지 않아요.</p>
+  </div>
+</div>
+
+<!-- ── 관리 화면 ── -->
+<div id="adminScreen">
+  <nav class="admin-nav">
+    <span class="admin-nav-logo">CSH · ADMIN</span>
+    <div class="admin-nav-right">
+      <button class="btn-add" onclick="addProject()">+ 프로젝트 추가</button>
+      <button class="btn-save" onclick="saveAll()">저장 & 배포</button>
+      <button class="btn-logout" onclick="logout()">로그아웃</button>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+    <h1 class="admin-title">Projects</h1>
+    <p class="admin-desc">수정 후 <strong>저장 & 배포</strong>를 누르면 약 1~2분 후 포트폴리오에 반영돼요. PDF는 Google Drive 공유 링크 또는 외부 URL을 붙여넣기 하세요.</p>
+    <div id="projectList"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const BG_OPTIONS = ['ptb1','ptb2','ptb3','ptb4'];
+let projects = [];
+let adminPassword = '';
+
+// ── 로그인
+async function doLogin() {
+  const pw = document.getElementById('pwInput').value.trim();
+  if (!pw) return;
+  adminPassword = pw;
+
+  // 서버에 GET으로 인증 테스트 (실제론 POST로 검증)
+  try {
+    const res = await fetch('/.netlify/functions/update-projects');
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    projects = data.projects || [];
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').style.display = 'block';
+    renderProjects();
+  } catch(e) {
+    showToast('서버 연결 실패. 잠시 후 다시 시도해주세요.', true);
+  }
+}
+
+document.getElementById('pwInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+function logout() {
+  adminPassword = '';
+  projects = [];
+  document.getElementById('adminScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('pwInput').value = '';
+}
+
+// ── 렌더링
+function renderProjects() {
+  const list = document.getElementById('projectList');
+  list.innerHTML = '';
+  projects.forEach((p, i) => {
+    list.appendChild(buildCard(p, i));
+  });
+}
+
+function buildCard(p, i) {
+  const card = document.createElement('div');
+  card.className = 'proj-card';
+  card.dataset.index = i;
+  card.innerHTML = `
+    <div class="proj-card-header">
+      <span class="proj-card-num">${String(i+1).padStart(2,'0')}</span>
+      <button class="btn-delete" onclick="deleteProject(${i})" title="삭제">✕</button>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>제목</label>
+        <input type="text" data-field="title" value="${esc(p.title)}"/>
+      </div>
+      <div class="field">
+        <label>태그</label>
+        <input type="text" data-field="tag" value="${esc(p.tag)}"/>
+      </div>
+    </div>
+
+    <div class="field-row full">
+      <div class="field">
+        <label>설명</label>
+        <textarea data-field="desc">${esc(p.desc)}</textarea>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>썸네일 이미지 경로</label>
+        <input type="text" data-field="img" value="${esc(p.img)}" placeholder="assets/projectlist_01.png"/>
+      </div>
+      <div class="field">
+        <label>배경 색상</label>
+        <select data-field="bg">
+          ${BG_OPTIONS.map(b => `<option value="${b}" ${p.bg===b?'selected':''}>${b}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+
+    <div class="field-row full">
+      <div class="field">
+        <label>PDF URL (Google Drive 또는 외부 링크)</label>
+        <input type="text" data-field="pdfUrl" value="${esc(p.pdfUrl||'')}" placeholder="https://drive.google.com/file/d/.../preview"/>
+      </div>
+    </div>
+
+    <p class="details-title">상세 정보 (기간 · 분류 · 분야 · 도구)</p>
+    <div class="details-wrap">
+      ${(p.details||[]).map((d,di) => `
+        <div class="detail-row">
+          <input type="text" data-detail="${di}" data-key="label" value="${esc(d.label)}" placeholder="라벨"/>
+          <input type="text" data-detail="${di}" data-key="value" value="${esc(d.value)}" placeholder="내용"/>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  return card;
+}
+
+function esc(str) {
+  return (str||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── 프로젝트 추가
+function addProject() {
+  projects.push({
+    num: String(projects.length+1).padStart(2,'0'),
+    tag: 'New',
+    bg: 'ptb1',
+    img: '',
+    title: '새 프로젝트',
+    desc: '',
+    pdfUrl: '',
+    details: [
+      { label: '기간', value: '' },
+      { label: '분류', value: '' },
+      { label: '분야', value: '' },
+      { label: '도구', value: '' },
+    ]
+  });
+  renderProjects();
+  // 스크롤 맨 아래로
+  setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 50);
+}
+
+// ── 프로젝트 삭제
+function deleteProject(i) {
+  if (!confirm(`"${projects[i].title}" 프로젝트를 삭제할까요?`)) return;
+  projects.splice(i, 1);
+  renderProjects();
+}
+
+// ── 저장 전 DOM에서 현재 값 수집
+function collectData() {
+  const cards = document.querySelectorAll('.proj-card');
+  const result = [];
+  cards.forEach((card, i) => {
+    const get = field => (card.querySelector(`[data-field="${field}"]`)?.value || '').trim();
+    const details = [];
+    card.querySelectorAll('[data-detail]').forEach(el => {
+      const di = el.dataset.detail;
+      if (!details[di]) details[di] = {};
+      details[di][el.dataset.key] = el.value.trim();
+    });
+    result.push({
+      num: String(i+1).padStart(2,'0'),
+      tag: get('tag'),
+      bg: get('bg'),
+      img: get('img'),
+      title: get('title'),
+      desc: get('desc'),
+      pdfUrl: get('pdfUrl'),
+      details: details.filter(Boolean),
+    });
+  });
+  return result;
+}
+
+// ── 저장 & 배포
+async function saveAll() {
+  const btn = document.querySelector('.btn-save');
+  btn.textContent = '저장 중…';
+  btn.classList.add('saving');
+
+  const updated = collectData();
+
+  try {
+    const res = await fetch('/.netlify/functions/update-projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: adminPassword, projects: updated }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Unknown error');
+    projects = updated;
+    showToast('✓ 저장 완료! 1~2분 후 포트폴리오에 반영돼요.');
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, true);
+  } finally {
+    btn.textContent = '저장 & 배포';
+    btn.classList.remove('saving');
+  }
+}
+
+// ── 토스트
+function showToast(msg, isError=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (isError ? ' error' : '');
+  setTimeout(() => { t.className = ''; }, 3500);
+}
+</script>
+</body>
+</html>

@@ -489,45 +489,7 @@ a.cf-info-value:hover{color:var(--w);}
     <p class="sec-eyebrow">Selected Work</p>
     <h2 class="sec-title">Project List.</h2>
   </div>
-  <div class="proj-grid">
-    <div class="proj-item reveal" data-proj="0">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb1"></div><img src="assets/projectlist_01.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
-      <div class="proj-item-meta"><span class="proj-item-num">01</span><span class="proj-item-tag">Branding</span></div>
-      <p class="proj-item-title">미림마이스터고 패턴 디자인 제작</p>
-      <p class="proj-item-desc">Mar 2025 – Jun 2025</p>
-    </div>
-    <div class="proj-item reveal d1" data-proj="1">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb2"></div><img src="assets/projectlist_02.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
-      <div class="proj-item-meta"><span class="proj-item-num">02</span><span class="proj-item-tag">Illustration</span></div>
-      <p class="proj-item-title">나를 주제로 아트워크 제작하기</p>
-      <p class="proj-item-desc">Jun 2025</p>
-    </div>
-    <div class="proj-item reveal d2" data-proj="2">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb3"></div><img src="assets/projectlist_03.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
-      <div class="proj-item-meta"><span class="proj-item-num">03</span><span class="proj-item-tag">Visual Design</span></div>
-      <p class="proj-item-title">어바웃타임 픽토그램 및 포스터 제작</p>
-      <p class="proj-item-desc">Aug 2025 – Nov 2025</p>
-    </div>
-    <div class="proj-item reveal d1" data-proj="3">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb4"></div><img src="assets/projectlist_04.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
-      <div class="proj-item-meta"><span class="proj-item-num">04</span><span class="proj-item-tag">UI Design</span></div>
-      <p class="proj-item-title">캘린더 GUI style별 아이콘 제작</p>
-      <p class="proj-item-desc">Oct 2025 – Nov 2025</p>
-    </div>
-    <div class="proj-item reveal d2" data-proj="4">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb1"></div><img src="assets/projectlist_05.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
-      <div class="proj-item-meta"><span class="proj-item-num">05</span><span class="proj-item-tag">Project</span></div>
-      <p class="proj-item-title">FacuCat 제작</p>
-      <p class="proj-item-desc">Oct 2025 – Dec 2025</p>
-    </div>
-    <div class="proj-item reveal d3" data-proj="5">
-      <div class="proj-thumb"><div class="proj-thumb-bg ptb2"></div><img src="assets/projectlist_06.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></div>
-      <div class="proj-item-meta"><span class="proj-item-num">06</span><span class="proj-item-tag">Competition</span></div>
-      <p class="proj-item-title">미톤 참여 및 Donut 제작</p>
-      <p class="proj-item-desc">Oct 24 – 25, 2025</p>
-    </div>
-
-  </div>
+  <div class="proj-grid"><!-- JS로 동적 렌더링 --></div>
 </section>
 
 <!-- CAREER -->
@@ -641,33 +603,68 @@ window.addEventListener('scroll',()=>{const s=window.scrollY;if(heroName)heroNam
 function initOrbit(id){const wrap=document.getElementById(id);if(!wrap)return;const tags=Array.from(wrap.querySelectorAll('.kw-tag'));const W=wrap.offsetWidth||480;const cx=W/2,cy=W/2;const inner=tags.slice(0,3),outer=tags.slice(3);const rIn=W*.26,rOut=W*.44;tags.forEach(t=>{t.style.position='absolute';t.style.zIndex='2';});let angle=0;(function frame(){inner.forEach((t,i)=>{const a=(angle+i*(360/inner.length))*Math.PI/180;t.style.left=(cx+rIn*Math.cos(a)-t.offsetWidth/2)+'px';t.style.top=(cy+rIn*Math.sin(a)-t.offsetHeight/2)+'px';});outer.forEach((t,i)=>{const a=(-angle*.65+i*(360/outer.length))*Math.PI/180;t.style.left=(cx+rOut*Math.cos(a)-t.offsetWidth/2)+'px';t.style.top=(cy+rOut*Math.sin(a)-t.offsetHeight/2)+'px';});angle+=.22;requestAnimationFrame(frame);})();}
 window.addEventListener('load',()=>{initOrbit('valOrbit');});
 
-// ── Project Modal
+// ── Project Modal (data/projects.json 동적 로드)
 document.addEventListener('DOMContentLoaded', function(){
-const PROJECTS = [
-  {num:'01',tag:'Branding',bg:'ptb1',img:'assets/projectlist_01.png',title:'미림마이스터고 패턴 디자인 제작',desc:'미림마이스터고등학교의 아이덴티티를 반영한 패턴 디자인 수행평가 작업입니다. 학교의 핵심 가치와 비전을 시각적 패턴으로 확장해 다양한 매체에 활용 가능한 브랜딩 에셋을 제작했습니다.',details:[{label:'기간',value:'March 2025 – June 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'브랜딩 · 패턴 디자인'},{label:'도구',value:'Illustrator · InDesign'}]},
-  {num:'02',tag:'Illustration',bg:'ptb2',img:'assets/projectlist_02.png',title:'나를 주제로 아트워크 제작하기',desc:'자기 자신을 주제로 한 아트워크 제작 수행평가입니다. 개인의 정체성과 감성을 시각 언어로 표현하며 일러스트레이션 역량을 쌓았습니다.',details:[{label:'기간',value:'June 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'일러스트레이션 · 아트워크'},{label:'도구',value:'Illustrator · Photoshop'}]},
-  {num:'03',tag:'Visual Design',bg:'ptb3',img:'assets/projectlist_03.png',title:'어바웃타임 픽토그램 및 포스터 제작',desc:'어바웃타임을 주제로 픽토그램과 포스터를 제작한 수행평가입니다. 감성적 주제를 시각 언어로 번역하며 포스터 디자인 역량을 향상시켰습니다.',details:[{label:'기간',value:'August – November 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'픽토그램 · 포스터 디자인'},{label:'도구',value:'Illustrator · Photoshop'}]},
-  {num:'04',tag:'UI Design',bg:'ptb4',img:'assets/projectlist_04.png',title:'캘린더 GUI style별 아이콘 제작',desc:'Material, Fluent, Cupertino 등 다양한 GUI 스타일에 맞춘 캘린더 아이콘 시스템을 설계·제작한 수행평가입니다. 일관된 시각 언어로 직관적인 사용자 경험을 목표로 했습니다.',details:[{label:'기간',value:'October – November 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'아이콘 디자인 · UI 디자인'},{label:'도구',value:'Figma · Illustrator'}]},
-  {num:'05',tag:'Project',bg:'ptb1',img:'assets/projectlist_05.png',title:'FacuCat 제작',desc:'교내 동아리 활동으로 진행한 FacuCat 프로젝트입니다. 디자인 전반을 담당하며 팀 협업 환경에서 실제 서비스 아이디어를 구조화하고 화면을 함께 설계했습니다.',details:[{label:'기간',value:'October – December 2025'},{label:'분류',value:'교내 동아리 프로젝트'},{label:'분야',value:'UI/UX 디자인 · 서비스 기획'},{label:'도구',value:'Figma · Notion'}]},
-  {num:'06',tag:'Competition',bg:'ptb2',img:'assets/projectlist_06.png',title:'미톤 참여 및 Donut 제작',desc:'교외 동아리 대회인 미톤에 참여하여 Donut 프로젝트를 기획·제작했습니다. 단기간의 집중 작업을 통해 아이디어 구상부터 시각화까지 전 과정을 경험했습니다.',details:[{label:'기간',value:'October 24–25, 2025'},{label:'분류',value:'교외 동아리 대회'},{label:'분야',value:'서비스 기획 · 비주얼 디자인'},{label:'도구',value:'Figma · Illustrator'}]},
-];
 
 const overlay  = document.getElementById('projModal');
 const closeBtn = document.getElementById('projModalClose');
+const projGrid = document.querySelector('.proj-grid');
+const bgCycle  = ['ptb1','ptb2','ptb3','ptb4'];
+let PROJECTS   = [];
+
+const FALLBACK = [
+  {num:'01',tag:'Branding',bg:'ptb1',img:'assets/projectlist_01.png',title:'미림마이스터고 패턴 디자인 제작',desc:'미림마이스터고등학교의 아이덴티티를 반영한 패턴 디자인 수행평가 작업입니다.',pdfUrl:'',details:[{label:'기간',value:'March 2025 – June 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'브랜딩 · 패턴 디자인'},{label:'도구',value:'Illustrator · InDesign'}]},
+  {num:'02',tag:'Illustration',bg:'ptb2',img:'assets/projectlist_02.png',title:'나를 주제로 아트워크 제작하기',desc:'자기 자신을 주제로 한 아트워크 제작 수행평가입니다.',pdfUrl:'',details:[{label:'기간',value:'June 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'일러스트레이션 · 아트워크'},{label:'도구',value:'Illustrator · Photoshop'}]},
+  {num:'03',tag:'Visual Design',bg:'ptb3',img:'assets/projectlist_03.png',title:'어바웃타임 픽토그램 및 포스터 제작',desc:'어바웃타임을 주제로 픽토그램과 포스터를 제작한 수행평가입니다.',pdfUrl:'',details:[{label:'기간',value:'August – November 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'픽토그램 · 포스터 디자인'},{label:'도구',value:'Illustrator · Photoshop'}]},
+  {num:'04',tag:'UI Design',bg:'ptb4',img:'assets/projectlist_04.png',title:'캘린더 GUI style별 아이콘 제작',desc:'다양한 GUI 스타일에 맞춘 캘린더 아이콘 시스템을 제작한 수행평가입니다.',pdfUrl:'',details:[{label:'기간',value:'October – November 2025'},{label:'분류',value:'교내 수행평가'},{label:'분야',value:'아이콘 디자인 · UI 디자인'},{label:'도구',value:'Figma · Illustrator'}]},
+  {num:'05',tag:'Project',bg:'ptb1',img:'assets/projectlist_05.png',title:'FacuCat 제작',desc:'교내 동아리 활동으로 진행한 FacuCat 프로젝트입니다.',pdfUrl:'',details:[{label:'기간',value:'October – December 2025'},{label:'분류',value:'교내 동아리 프로젝트'},{label:'분야',value:'UI/UX 디자인 · 서비스 기획'},{label:'도구',value:'Figma · Notion'}]},
+  {num:'06',tag:'Competition',bg:'ptb2',img:'assets/projectlist_06.png',title:'미톤 참여 및 Donut 제작',desc:'미톤에 참여하여 Donut 프로젝트를 기획·제작했습니다.',pdfUrl:'',details:[{label:'기간',value:'October 24–25, 2025'},{label:'분류',value:'교외 동아리 대회'},{label:'분야',value:'서비스 기획 · 비주얼 디자인'},{label:'도구',value:'Figma · Illustrator'}]},
+];
+
+function renderGrid(data){
+  if(!projGrid) return;
+  projGrid.innerHTML = '';
+  const delays = ['','d1','d2','d3'];
+  data.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'proj-item reveal' + (delays[i%delays.length] ? ' '+delays[i%delays.length] : '');
+    div.dataset.proj = i;
+    div.style.cursor = 'pointer';
+    div.innerHTML =
+      '<div class="proj-thumb">' +
+        '<div class="proj-thumb-bg ' + (p.bg||bgCycle[i%4]) + '"></div>' +
+        '<img src="' + (p.img||'') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;' + (p.img?'':'display:none') + '">' +
+      '</div>' +
+      '<div class="proj-item-meta">' +
+        '<span class="proj-item-num">' + String(i+1).padStart(2,'0') + '</span>' +
+        '<span class="proj-item-tag">' + (p.tag||'') + '</span>' +
+      '</div>' +
+      '<p class="proj-item-title">' + (p.title||'') + '</p>' +
+      '<p class="proj-item-desc">' + ((p.details&&p.details[0])?p.details[0].value:'') + '</p>';
+    div.addEventListener('click', ()=> openModal(i));
+    projGrid.appendChild(div);
+  });
+}
 
 function openModal(idx){
   const p = PROJECTS[idx];
   if(!p) return;
-  document.getElementById('pmThumbBg').className = 'pm-thumb-bg ' + p.bg;
+  document.getElementById('pmThumbBg').className = 'pm-thumb-bg ' + (p.bg||'ptb1');
   const pmImg = document.getElementById('pmThumbImg');
-  if(p.img){ pmImg.src = p.img; pmImg.style.display='block'; } else { pmImg.src=''; pmImg.style.display='none'; }
-  document.getElementById('pmNum').textContent   = p.num;
-  document.getElementById('pmTag').textContent   = p.tag;
-  document.getElementById('pmTitle').textContent = p.title;
-  document.getElementById('pmDesc').textContent  = p.desc;
-  document.getElementById('pmDetails').innerHTML = p.details.map(d=>
-    `<div class="pm-detail-item"><p class="pm-detail-label">${d.label}</p><p class="pm-detail-value">${d.value}</p></div>`
+  if(p.img){ pmImg.src=p.img; pmImg.style.display='block'; } else { pmImg.src=''; pmImg.style.display='none'; }
+  document.getElementById('pmNum').textContent   = String(idx+1).padStart(2,'0');
+  document.getElementById('pmTag').textContent   = p.tag||'';
+  document.getElementById('pmTitle').textContent = p.title||'';
+  document.getElementById('pmDesc').textContent  = p.desc||'';
+  document.getElementById('pmDetails').innerHTML = (p.details||[]).map(d=>
+    '<div class="pm-detail-item"><p class="pm-detail-label">'+d.label+'</p><p class="pm-detail-value">'+d.value+'</p></div>'
   ).join('');
+  // PDF 뷰어
+  const pdfWrap = document.getElementById('pmPdfWrap');
+  if(pdfWrap){
+    if(p.pdfUrl){ pdfWrap.style.display='block'; pdfWrap.innerHTML='<iframe src="'+p.pdfUrl+'" style="width:100%;height:520px;border:none;border-radius:10px;" allowfullscreen></iframe>'; }
+    else { pdfWrap.style.display='none'; pdfWrap.innerHTML=''; }
+  }
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -675,16 +672,17 @@ function openModal(idx){
 function closeModal(){
   overlay.classList.remove('open');
   document.body.style.overflow = '';
+  const pdfWrap = document.getElementById('pmPdfWrap');
+  if(pdfWrap){ pdfWrap.innerHTML=''; pdfWrap.style.display='none'; }
 }
 
-// 프로젝트 아이템 클릭 이벤트
-document.querySelectorAll('.proj-item').forEach((item, idx)=>{
-  item.style.cursor = 'pointer';
-  item.addEventListener('click', ()=> openModal(idx));
-});
+fetch('/data/projects.json')
+  .then(r=>{ if(!r.ok) throw new Error(); return r.json(); })
+  .then(data=>{ PROJECTS=data; renderGrid(data); })
+  .catch(()=>{ PROJECTS=FALLBACK; renderGrid(FALLBACK); });
 
-closeBtn.addEventListener('click', closeModal);
-overlay.addEventListener('click', e=>{ if(e.target === overlay) closeModal(); });
+if(closeBtn) closeBtn.addEventListener('click', closeModal);
+overlay.addEventListener('click', e=>{ if(e.target===overlay) closeModal(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 }); // DOMContentLoaded
 
@@ -772,6 +770,7 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
       </div>
       <h2 class="pm-title" id="pmTitle"></h2>
       <p class="pm-desc" id="pmDesc"></p>
+      <div id="pmPdfWrap" style="display:none;margin-bottom:28px;"></div>
       <div class="pm-details" id="pmDetails"></div>
     </div>
   </div>
