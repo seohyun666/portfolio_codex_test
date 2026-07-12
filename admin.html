@@ -305,8 +305,15 @@ function buildCard(p, i) {
 
     <div class="field-row full">
       <div class="field">
-        <label>PDF URL (Google Drive 또는 외부 링크)</label>
-        <input type="text" data-field="pdfUrl" value="${esc(p.pdfUrl||'')}" placeholder="https://drive.google.com/file/d/.../preview"/>
+        <label>PDF 파일</label>
+        <div class="img-upload-wrap" id="pdfWrap_${i}">
+          ${p.pdfUrl ? `<div class="img-preview"><span style="font-size:1.4rem">📄</span><span class="img-path">${esc(p.pdfUrl)}</span></div>` : '<span class="img-empty">PDF 없음</span>'}
+          <input type="hidden" data-field="pdfUrl" value="${esc(p.pdfUrl||'')}"/>
+          <label class="btn-img-upload">
+            📄 PDF 선택
+            <input type="file" accept=".pdf" style="display:none" onchange="uploadPdf(this, ${i})"/>
+          </label>
+        </div>
       </div>
     </div>
 
@@ -380,6 +387,62 @@ function collectData() {
     });
   });
   return result;
+}
+
+// ── PDF 업로드
+async function uploadPdf(input, cardIndex) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const wrap = document.getElementById('pdfWrap_' + cardIndex);
+  const uploadBtn = wrap.querySelector('.btn-img-upload');
+  uploadBtn.innerHTML = '<span class="uploading-label">업로드 중…</span>';
+
+  try {
+    const base64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result.split(',')[1]);
+      reader.onerror = rej;
+      reader.readAsDataURL(file);
+    });
+
+    const safeName = 'pdf_' + Date.now() + '.pdf';
+    const path = 'assets/' + safeName;
+
+    const res = await fetch('/.netlify/functions/update-projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password: adminPassword,
+        action: 'upload-image',
+        fileName: safeName,
+        fileContent: base64,
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '업로드 실패');
+
+    const hiddenInput = wrap.querySelector('[data-field="pdfUrl"]');
+    hiddenInput.value = path;
+
+    wrap.innerHTML = `
+      <div class="img-preview">
+        <span style="font-size:1.4rem">📄</span>
+        <span class="img-path">${path}</span>
+      </div>
+      <input type="hidden" data-field="pdfUrl" value="${path}"/>
+      <label class="btn-img-upload">
+        📄 PDF 변경
+        <input type="file" accept=".pdf" style="display:none" onchange="uploadPdf(this, ${cardIndex})"/>
+      </label>
+    `;
+
+    showToast('✓ PDF 업로드 완료!');
+  } catch(e) {
+    uploadBtn.innerHTML = '📄 PDF 선택';
+    showToast('업로드 실패: ' + e.message, true);
+  }
 }
 
 // ── 이미지 업로드
