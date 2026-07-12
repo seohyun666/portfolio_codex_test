@@ -214,5 +214,32 @@
         "value": "Figma"
       }
     ]
+  },
+  {
+    "num": "09",
+    "tag": "UIUX",
+    "bg": "ptb1",
+    "img": "assets/proj_1783831202281.png",
+    "title": "마이크로웹사이트 제작",
+    "desc": "총 9가지의 문구류의 탄생부터 발전, 그리고 현재의 인식을 주제로 마이크로 웹사이트를 제작하였습니다.",
+    "pdfUrl": "",
+    "details": [
+      {
+        "label": "기간",
+        "value": "2026.04-07"
+      },
+      {
+        "label": "분류",
+        "value": "교내 수행평가"
+      },
+      {
+        "label": "분야",
+        "value": "UIUX, Visual design"
+      },
+      {
+        "label": "도구",
+        "value": "Figma, AdobeIllustrator, AdobePhotoshop"
+      }
+    ]
   }
 ]
