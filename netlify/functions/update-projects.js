@@ -52,6 +52,47 @@ exports.handler = async (event) => {
       }
     }
 
+    // 이미지 업로드 액션
+    if (body.action === 'upload-image') {
+      try {
+        const imgPath = 'assets/' + body.fileName;
+        // 기존 파일 SHA 확인 (없으면 신규 생성)
+        let sha;
+        const checkRes = await fetch(
+          `https://api.github.com/repos/${OWNER}/${REPO}/contents/${imgPath}`,
+          { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
+        );
+        if (checkRes.ok) {
+          const checkData = await checkRes.json();
+          sha = checkData.sha;
+        }
+
+        const uploadRes = await fetch(
+          `https://api.github.com/repos/${OWNER}/${REPO}/contents/${imgPath}`,
+          {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/vnd.github+json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              message: `Upload image: ${body.fileName}`,
+              content: body.fileContent,
+              ...(sha ? { sha } : {}),
+            }),
+          }
+        );
+        if (!uploadRes.ok) {
+          const err = await uploadRes.json();
+          return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
+        }
+        return { statusCode: 200, headers, body: JSON.stringify({ success: true, path: imgPath }) };
+      } catch(e) {
+        return { statusCode: 500, headers, body: JSON.stringify({ error: e.message }) };
+      }
+    }
+
     // 저장 액션: projects.json 업데이트
     if (body.projects) {
       try {

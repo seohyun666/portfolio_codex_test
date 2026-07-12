@@ -142,7 +142,19 @@
     /* 저장 스피너 */
     .saving { opacity: 0.6; pointer-events: none; }
 
-    @media(max-width: 600px) {
+    .img-upload-wrap{display:flex;flex-direction:column;gap:10px;}
+    .img-preview{display:flex;align-items:center;gap:12px;background:var(--ink3);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;}
+    .img-preview img{width:56px;height:40px;object-fit:cover;border-radius:6px;flex-shrink:0;}
+    .img-path{font-size:0.78rem;color:#888;word-break:break-all;}
+    .img-empty{font-size:0.8rem;color:#444;padding:10px 0;}
+    .btn-img-upload{
+      display:inline-flex;align-items:center;gap:8px;
+      background:transparent;border:1px solid var(--bd);border-radius:8px;
+      padding:8px 16px;font-family:inherit;font-size:0.82rem;color:var(--w);
+      cursor:pointer;transition:border-color .2s;width:fit-content;
+    }
+    .btn-img-upload:hover{border-color:var(--ind);}
+    .uploading-label{font-size:0.78rem;color:var(--ind);}
       .admin-body { padding: 32px 20px; }
       .field-row { grid-template-columns: 1fr; }
       .admin-nav { padding: 14px 20px; }
@@ -273,8 +285,15 @@ function buildCard(p, i) {
 
     <div class="field-row">
       <div class="field">
-        <label>썸네일 이미지 경로</label>
-        <input type="text" data-field="img" value="${esc(p.img)}" placeholder="assets/projectlist_01.png"/>
+        <label>썸네일 이미지</label>
+        <div class="img-upload-wrap" id="imgWrap_${i}">
+          ${p.img ? `<div class="img-preview"><img src="${esc(p.img)}" alt=""/><span class="img-path">${esc(p.img)}</span></div>` : '<span class="img-empty">이미지 없음</span>'}
+          <input type="hidden" data-field="img" value="${esc(p.img)}"/>
+          <label class="btn-img-upload">
+            📁 이미지 선택
+            <input type="file" accept="image/*" style="display:none" onchange="uploadImage(this, ${i})"/>
+          </label>
+        </div>
       </div>
       <div class="field">
         <label>배경 색상</label>
@@ -361,6 +380,66 @@ function collectData() {
     });
   });
   return result;
+}
+
+// ── 이미지 업로드
+async function uploadImage(input, cardIndex) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const wrap = document.getElementById('imgWrap_' + cardIndex);
+  const uploadBtn = wrap.querySelector('.btn-img-upload');
+  uploadBtn.innerHTML = '<span class="uploading-label">업로드 중…</span>';
+
+  try {
+    // 파일 → base64
+    const base64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result.split(',')[1]);
+      reader.onerror = rej;
+      reader.readAsDataURL(file);
+    });
+
+    const ext = file.name.split('.').pop().toLowerCase();
+    const safeName = 'proj_' + Date.now() + '.' + ext;
+    const path = 'assets/' + safeName;
+
+    const res = await fetch('/.netlify/functions/update-projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password: adminPassword,
+        action: 'upload-image',
+        fileName: safeName,
+        fileContent: base64,
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '업로드 실패');
+
+    // hidden input 업데이트
+    const hiddenInput = wrap.querySelector('[data-field="img"]');
+    hiddenInput.value = path;
+
+    // 미리보기 업데이트
+    wrap.innerHTML = `
+      <div class="img-preview">
+        <img src="${path}?t=${Date.now()}" alt=""/>
+        <span class="img-path">${path}</span>
+      </div>
+      <input type="hidden" data-field="img" value="${path}"/>
+      <label class="btn-img-upload">
+        📁 이미지 변경
+        <input type="file" accept="image/*" style="display:none" onchange="uploadImage(this, ${cardIndex})"/>
+      </label>
+    `;
+
+    showToast('✓ 이미지 업로드 완료!');
+  } catch(e) {
+    uploadBtn.innerHTML = '📁 이미지 선택';
+    showToast('업로드 실패: ' + e.message, true);
+  }
 }
 
 // ── 저장 & 배포
