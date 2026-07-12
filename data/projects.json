@@ -10,7 +10,7 @@
     "details": [
       {
         "label": "기간",
-        "value": "March 2025 – June 2025"
+        "value": "2025.03-06"
       },
       {
         "label": "분류",
@@ -37,7 +37,7 @@
     "details": [
       {
         "label": "기간",
-        "value": "June 2025"
+        "value": "2025.07"
       },
       {
         "label": "분류",
@@ -64,7 +64,7 @@
     "details": [
       {
         "label": "기간",
-        "value": "August – November 2025"
+        "value": "2025.08-11"
       },
       {
         "label": "분류",
@@ -91,7 +91,7 @@
     "details": [
       {
         "label": "기간",
-        "value": "October – November 2025"
+        "value": "2025.10~11"
       },
       {
         "label": "분류",
@@ -118,7 +118,7 @@
     "details": [
       {
         "label": "기간",
-        "value": "October – December 2025"
+        "value": "2025.10-11"
       },
       {
         "label": "분류",
@@ -145,7 +145,7 @@
     "details": [
       {
         "label": "기간",
-        "value": "October 24–25, 2025"
+        "value": "2025.10.24-10.25"
       },
       {
         "label": "분류",
@@ -158,6 +158,33 @@
       {
         "label": "도구",
         "value": "Figma · Illustrator"
+      }
+    ]
+  },
+  {
+    "num": "07",
+    "tag": "Project",
+    "bg": "ptb1",
+    "img": "assets/proj_1783828592961.png",
+    "title": "TOPPER 웹사이트 제작",
+    "desc": "동아리를 홍보하는 웹사이트를 디자인 하였습니다. 팀프로젝트로 다른 디자인과 동아리부원 1명과 함께 제작하였습니다.",
+    "pdfUrl": "",
+    "details": [
+      {
+        "label": "기간",
+        "value": "2026.02-03"
+      },
+      {
+        "label": "분류",
+        "value": "교내 동아리"
+      },
+      {
+        "label": "분야",
+        "value": "UIUX디자인"
+      },
+      {
+        "label": "도구",
+        "value": "Figma"
       }
     ]
   }
