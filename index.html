@@ -678,8 +678,20 @@ function closeModal(){
 
 fetch('/data/projects.json')
   .then(r=>{ if(!r.ok) throw new Error(); return r.json(); })
-  .then(data=>{ PROJECTS=data; renderGrid(data); })
-  .catch(()=>{ PROJECTS=FALLBACK; renderGrid(FALLBACK); });
+  .then(data=>{ PROJECTS=data; renderGrid(data); observeNewItems(); })
+  .catch(()=>{ PROJECTS=FALLBACK; renderGrid(FALLBACK); observeNewItems(); });
+
+function observeNewItems(){
+  const obs2 = new IntersectionObserver(e=>{
+    e.forEach(x=>{ if(x.isIntersecting){ x.target.classList.add('vis'); obs2.unobserve(x.target); }});
+  },{threshold:.05});
+  document.querySelectorAll('.proj-item.reveal').forEach(el=>{
+    // 이미 화면에 있으면 바로 표시
+    const rect = el.getBoundingClientRect();
+    if(rect.top < window.innerHeight){ el.classList.add('vis'); }
+    else { obs2.observe(el); }
+  });
+}
 
 if(closeBtn) closeBtn.addEventListener('click', closeModal);
 overlay.addEventListener('click', e=>{ if(e.target===overlay) closeModal(); });
