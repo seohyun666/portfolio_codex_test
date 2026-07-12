@@ -52,6 +52,39 @@ exports.handler = async (event) => {
       }
     }
 
+    // 파일 삭제 액션
+    if (body.action === 'delete-file') {
+      try {
+        const filePath = body.filePath;
+        const checkRes = await fetch(
+          `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filePath}`,
+          { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
+        );
+        if (!checkRes.ok) return { statusCode: 404, headers, body: JSON.stringify({ error: '파일 없음' }) };
+        const checkData = await checkRes.json();
+
+        const delRes = await fetch(
+          `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filePath}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/vnd.github+json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: 'Delete file: ' + filePath, sha: checkData.sha }),
+          }
+        );
+        if (!delRes.ok) {
+          const err = await delRes.json();
+          return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
+        }
+        return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
+      } catch(e) {
+        return { statusCode: 500, headers, body: JSON.stringify({ error: e.message }) };
+      }
+    }
+
     // 이미지 업로드 액션
     if (body.action === 'upload-image') {
       try {

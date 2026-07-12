@@ -480,14 +480,31 @@ async function uploadGalleryImages(input, cardIndex) {
 
 function removeGalleryImg(cardIndex, gi) {
   const thumb = document.getElementById('gthumb_' + cardIndex + '_' + gi);
-  if(thumb){
-    const imgSrc = thumb.querySelector('img')?.src || '';
-    const fileName = imgSrc.split('/').pop().split('?')[0];
+  if(!thumb) return;
+  const imgEl = thumb.querySelector('img');
+  const imgSrc = imgEl?.src || '';
+  const fileName = imgSrc.split('/').pop().split('?')[0];
+  const filePath = 'assets/' + fileName;
+
+  thumb.style.opacity = '0.4';
+
+  fetch('/.netlify/functions/update-projects', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: adminPassword, action: 'delete-file', filePath }),
+  })
+  .then(r => r.json())
+  .then(data => {
     thumb.remove();
     if(projects[cardIndex]?.images){
       projects[cardIndex].images = projects[cardIndex].images.filter(s => !s.includes(fileName));
     }
-  }
+    showToast('✓ 이미지 삭제 완료');
+  })
+  .catch(() => {
+    thumb.style.opacity = '1';
+    showToast('삭제 실패', true);
+  });
 }
 
 // ── 이미지 업로드
