@@ -234,25 +234,46 @@ a.cf-info-value:hover{color:var(--w);}
   .footer-mini{flex-direction:column;gap:8px;text-align:center;}
 }
 
+/* ── GALLERY */
+.pm-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:32px;padding-top:28px;border-top:1px solid var(--bd);}
+.pm-gallery-item{aspect-ratio:4/3;border-radius:8px;overflow:hidden;cursor:pointer;position:relative;background:var(--ink3);}
+.pm-gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease;}
+.pm-gallery-item:hover img{transform:scale(1.06);}
+.pm-gallery-item::after{content:'🔍';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:rgba(0,0,0,0);transition:background .2s;opacity:0;}
+.pm-gallery-item:hover::after{background:rgba(0,0,0,0.4);opacity:1;}
+
+/* ── LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lightbox img{max-width:92vw;max-height:90vh;object-fit:contain;border-radius:8px;user-select:none;}
+.lightbox-close{position:absolute;top:24px;right:32px;background:none;border:none;color:#fff;font-size:1.8rem;cursor:pointer;opacity:.6;transition:opacity .2s;line-height:1;}
+.lightbox-close:hover{opacity:1;}
+.lightbox-prev,.lightbox-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:none;color:#fff;font-size:1.4rem;width:48px;height:48px;border-radius:50%;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;}
+.lightbox-prev{left:24px;}
+.lightbox-next{right:24px;}
+.lightbox-prev:hover,.lightbox-next:hover{background:rgba(255,255,255,0.18);}
+.lightbox-counter{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-size:0.78rem;color:rgba(255,255,255,0.5);letter-spacing:0.1em;}
+
 /* ── PROJECT MODAL ── */
 .proj-modal-overlay{
   position:fixed;inset:0;z-index:1000;
-  background:rgba(8,8,8,0.85);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:rgba(8,8,8,0.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
   transition:opacity .3s ease;
+  padding:20px;
 }
 .proj-modal-overlay.open{opacity:1;pointer-events:all;}
 .proj-modal{
   position:relative;
-  width:min(860px,90vw);
-  max-height:90vh;
+  width:min(1100px,95vw);
+  max-height:92vh;
   overflow-y:auto;
   background:var(--ink2);
-  border:1px solid rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.08);
   border-radius:20px;
-  box-shadow:0 32px 80px rgba(0,0,0,0.7);
+  box-shadow:0 32px 80px rgba(0,0,0,0.8);
   transform:translateY(24px) scale(0.97);
   transition:transform .35s cubic-bezier(.16,1,.3,1);
   scrollbar-width:none;
@@ -265,7 +286,21 @@ a.cf-info-value:hover{color:var(--w);}
   border-radius:16px 16px 0 0;
 }
 .pm-thumb-bg{position:absolute;inset:0;}
-.pm-body{padding:40px 48px 52px;}
+/* PDF 있을 때 썸네일 숨김 */
+.proj-modal.has-pdf .pm-thumb{display:none;}
+.pm-pdf-viewer{
+  width:100%;
+  background:#111;
+  border-radius:16px 16px 0 0;
+  overflow:hidden;
+}
+.pm-pdf-viewer iframe{
+  width:100%;
+  height:80vh;
+  border:none;
+  display:block;
+}
+.pm-body{padding:36px 48px 48px;}
 .pm-meta{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
 .pm-num{font-size:0.6rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ind);}
 .pm-tag{font-size:0.6rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;background:rgba(93,95,239,0.1);border:1px solid rgba(93,95,239,0.25);color:rgba(93,95,239,0.8);border-radius:var(--r-pill);}
@@ -646,12 +681,21 @@ function renderGrid(data){
   });
 }
 
+let lightboxImages = [];
+let lightboxIdx = 0;
+
 function openModal(idx){
   const p = PROJECTS[idx];
   if(!p) return;
+  const modalBox = document.getElementById('projModalBox');
+  modalBox.classList.remove('has-pdf');
+
+  // 썸네일
   document.getElementById('pmThumbBg').className = 'pm-thumb-bg ' + (p.bg||'ptb1');
   const pmImg = document.getElementById('pmThumbImg');
-  if(p.img){ pmImg.src=p.img; pmImg.style.display='block'; } else { pmImg.src=''; pmImg.style.display='none'; }
+  if(p.img){ pmImg.src=p.img; pmImg.style.display='block'; }
+  else { pmImg.src=''; pmImg.style.display='none'; }
+
   document.getElementById('pmNum').textContent   = String(idx+1).padStart(2,'0');
   document.getElementById('pmTag').textContent   = p.tag||'';
   document.getElementById('pmTitle').textContent = p.title||'';
@@ -659,12 +703,24 @@ function openModal(idx){
   document.getElementById('pmDetails').innerHTML = (p.details||[]).map(d=>
     '<div class="pm-detail-item"><p class="pm-detail-label">'+d.label+'</p><p class="pm-detail-value">'+d.value+'</p></div>'
   ).join('');
-  // PDF 뷰어
-  const pdfWrap = document.getElementById('pmPdfWrap');
-  if(pdfWrap){
-    if(p.pdfUrl){ pdfWrap.style.display='block'; pdfWrap.innerHTML='<iframe src="'+p.pdfUrl+'" style="width:100%;height:520px;border:none;border-radius:10px;" allowfullscreen></iframe>'; }
-    else { pdfWrap.style.display='none'; pdfWrap.innerHTML=''; }
+
+  // 갤러리
+  const gallery = document.getElementById('pmGallery');
+  const images = p.images || [];
+  if(images.length > 0){
+    lightboxImages = images;
+    gallery.style.display = 'grid';
+    gallery.innerHTML = images.map((src, i) =>
+      '<div class="pm-gallery-item" onclick="openLightbox('+i+')">' +
+        '<img src="'+src+'" alt=""/>' +
+      '</div>'
+    ).join('');
+  } else {
+    gallery.style.display = 'none';
+    gallery.innerHTML = '';
+    lightboxImages = [];
   }
+
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -672,9 +728,39 @@ function openModal(idx){
 function closeModal(){
   overlay.classList.remove('open');
   document.body.style.overflow = '';
-  const pdfWrap = document.getElementById('pmPdfWrap');
-  if(pdfWrap){ pdfWrap.innerHTML=''; pdfWrap.style.display='none'; }
+  document.getElementById('projModalBox').classList.remove('has-pdf');
 }
+
+function openLightbox(i){
+  lightboxIdx = i;
+  document.getElementById('lightboxImg').src = lightboxImages[i];
+  document.getElementById('lightboxCounter').textContent = (i+1) + ' / ' + lightboxImages.length;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightboxImg').src = '';
+}
+
+function lightboxNav(dir){
+  lightboxIdx = (lightboxIdx + dir + lightboxImages.length) % lightboxImages.length;
+  document.getElementById('lightboxImg').src = lightboxImages[lightboxIdx];
+  document.getElementById('lightboxCounter').textContent = (lightboxIdx+1) + ' / ' + lightboxImages.length;
+}
+
+document.getElementById('lightbox').addEventListener('click', e => {
+  if(e.target === document.getElementById('lightbox')) closeLightbox();
+});
+document.addEventListener('keydown', e => {
+  if(document.getElementById('lightbox').classList.contains('open')){
+    if(e.key==='ArrowLeft') lightboxNav(-1);
+    if(e.key==='ArrowRight') lightboxNav(1);
+    if(e.key==='Escape') closeLightbox();
+    return;
+  }
+  if(e.key==='Escape') closeModal();
+});
 
 fetch('/data/projects.json')
   .then(r=>{ if(!r.ok) throw new Error(); return r.json(); })
@@ -782,10 +868,19 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
       </div>
       <h2 class="pm-title" id="pmTitle"></h2>
       <p class="pm-desc" id="pmDesc"></p>
-      <div id="pmPdfWrap" style="display:none;margin-bottom:28px;"></div>
       <div class="pm-details" id="pmDetails"></div>
+      <div class="pm-gallery" id="pmGallery" style="display:none;"></div>
     </div>
   </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-prev" onclick="lightboxNav(-1)">‹</button>
+  <img id="lightboxImg" src="" alt=""/>
+  <button class="lightbox-next" onclick="lightboxNav(1)">›</button>
+  <span class="lightbox-counter" id="lightboxCounter"></span>
 </div>
 </body>
 </html>

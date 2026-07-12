@@ -155,6 +155,10 @@
     }
     .btn-img-upload:hover{border-color:var(--ind);}
     .uploading-label{font-size:0.78rem;color:var(--ind);}
+    .gallery-preview{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:4px;min-height:20px;}
+    .gallery-thumb{position:relative;width:80px;height:60px;border-radius:6px;overflow:hidden;border:1px solid var(--bd);}
+    .gallery-thumb img{width:100%;height:100%;object-fit:cover;}
+    .gallery-remove{position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.75);border:none;color:#fff;font-size:0.55rem;width:16px;height:16px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;}
       .admin-body { padding: 32px 20px; }
       .field-row { grid-template-columns: 1fr; }
       .admin-nav { padding: 14px 20px; }
@@ -305,13 +309,19 @@ function buildCard(p, i) {
 
     <div class="field-row full">
       <div class="field">
-        <label>PDF 파일</label>
-        <div class="img-upload-wrap" id="pdfWrap_${i}">
-          ${p.pdfUrl ? `<div class="img-preview"><span style="font-size:1.4rem">📄</span><span class="img-path">${esc(p.pdfUrl)}</span></div>` : '<span class="img-empty">PDF 없음</span>'}
-          <input type="hidden" data-field="pdfUrl" value="${esc(p.pdfUrl||'')}"/>
-          <label class="btn-img-upload">
-            📄 PDF 선택
-            <input type="file" accept=".pdf" style="display:none" onchange="uploadPdf(this, ${i})"/>
+        <label>상세 이미지 갤러리 (여러 장 추가 가능)</label>
+        <div class="gallery-upload-wrap" id="galleryWrap_${i}">
+          <div class="gallery-preview" id="galleryPreview_${i}">
+            ${(p.images||[]).map((src,gi) => `
+              <div class="gallery-thumb" id="gthumb_${i}_${gi}">
+                <img src="${esc(src)}" alt=""/>
+                <button onclick="removeGalleryImg(${i},${gi})" class="gallery-remove">✕</button>
+              </div>
+            `).join('')}
+          </div>
+          <label class="btn-img-upload" style="margin-top:10px;">
+            🖼 이미지 추가
+            <input type="file" accept="image/*" multiple style="display:none" onchange="uploadGalleryImages(this, ${i})"/>
           </label>
         </div>
       </div>
@@ -385,7 +395,7 @@ function collectData() {
       img: get('img'),
       title: get('title'),
       desc: get('desc'),
-      pdfUrl: get('pdfUrl'),
+      images: projects[i]?.images || [],
       details: details.filter(Boolean),
     });
   });
@@ -417,59 +427,66 @@ function updateImgPreview(input, cardIndex) {
   }
 }
 
-// ── PDF 업로드
-async function uploadPdf(input, cardIndex) {
-  const file = input.files[0];
-  if (!file) return;
+// ── 갤러리 이미지 업로드 (여러 장)
+async function uploadGalleryImages(input, cardIndex) {
+  const files = Array.from(input.files);
+  if(!files.length) return;
 
-  const wrap = document.getElementById('pdfWrap_' + cardIndex);
-  const uploadBtn = wrap.querySelector('.btn-img-upload');
-  uploadBtn.innerHTML = '<span class="uploading-label">업로드 중…</span>';
+  const preview = document.getElementById('galleryPreview_' + cardIndex);
+  for(const file of files){
+    const placeholderKey = 'gph_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const placeholder = document.createElement('div');
+    placeholder.className = 'gallery-thumb';
+    placeholder.id = placeholderKey;
+    placeholder.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#555;">...</div>';
+    preview.appendChild(placeholder);
 
-  try {
-    const base64 = await new Promise((res, rej) => {
-      const reader = new FileReader();
-      reader.onload = () => res(reader.result.split(',')[1]);
-      reader.onerror = rej;
-      reader.readAsDataURL(file);
-    });
+    try {
+      const base64 = await new Promise((res,rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      const ext = file.name.split('.').pop().toLowerCase();
+      const safeName = 'gallery_' + Date.now() + '_' + Math.floor(Math.random()*1000) + '.' + ext;
+      const path = 'assets/' + safeName;
 
-    const safeName = 'pdf_' + Date.now() + '.pdf';
-    const path = 'assets/' + safeName;
+      const res = await fetch('/.netlify/functions/update-projects', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ password: adminPassword, action:'upload-image', fileName: safeName, fileContent: base64 }),
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error);
 
-    const res = await fetch('/.netlify/functions/update-projects', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        password: adminPassword,
-        action: 'upload-image',
-        fileName: safeName,
-        fileContent: base64,
-      }),
-    });
+      if(!projects[cardIndex].images) projects[cardIndex].images = [];
+      projects[cardIndex].images.push(path);
+      const gi = projects[cardIndex].images.length - 1;
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || '업로드 실패');
+      const ph = document.getElementById(placeholderKey);
+      if(ph) ph.outerHTML = '<div class="gallery-thumb" id="gthumb_'+cardIndex+'_'+gi+'">' +
+        '<img src="'+path+'" alt=""/>' +
+        '<button onclick="removeGalleryImg('+cardIndex+','+gi+')" class="gallery-remove">✕</button>' +
+        '</div>';
 
-    const hiddenInput = wrap.querySelector('[data-field="pdfUrl"]');
-    hiddenInput.value = path;
+    } catch(e) {
+      document.getElementById(placeholderKey)?.remove();
+      showToast('업로드 실패: ' + e.message, true);
+    }
+  }
+  showToast('✓ 이미지 업로드 완료!');
+}
 
-    wrap.innerHTML = `
-      <div class="img-preview">
-        <span style="font-size:1.4rem">📄</span>
-        <span class="img-path">${path}</span>
-      </div>
-      <input type="hidden" data-field="pdfUrl" value="${path}"/>
-      <label class="btn-img-upload">
-        📄 PDF 변경
-        <input type="file" accept=".pdf" style="display:none" onchange="uploadPdf(this, ${cardIndex})"/>
-      </label>
-    `;
-
-    showToast('✓ PDF 업로드 완료!');
-  } catch(e) {
-    uploadBtn.innerHTML = '📄 PDF 선택';
-    showToast('업로드 실패: ' + e.message, true);
+function removeGalleryImg(cardIndex, gi) {
+  const thumb = document.getElementById('gthumb_' + cardIndex + '_' + gi);
+  if(thumb){
+    const imgSrc = thumb.querySelector('img')?.src || '';
+    const fileName = imgSrc.split('/').pop().split('?')[0];
+    thumb.remove();
+    if(projects[cardIndex]?.images){
+      projects[cardIndex].images = projects[cardIndex].images.filter(s => !s.includes(fileName));
+    }
   }
 }
 
