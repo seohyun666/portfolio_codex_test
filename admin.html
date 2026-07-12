@@ -288,7 +288,7 @@ function buildCard(p, i) {
         <label>썸네일 이미지</label>
         <div class="img-upload-wrap" id="imgWrap_${i}">
           ${p.img ? `<div class="img-preview"><img src="${esc(p.img)}" alt=""/><span class="img-path">${esc(p.img)}</span></div>` : '<span class="img-empty">이미지 없음</span>'}
-          <input type="hidden" data-field="img" value="${esc(p.img)}"/>
+          <input type="text" data-field="img" value="${esc(p.img)}" placeholder="직접 경로 입력 (예: assets/projectlist_01.png)" style="margin-bottom:8px;" oninput="updateImgPreview(this, ${i})"/>
           <label class="btn-img-upload">
             📁 이미지 선택
             <input type="file" accept="image/*" style="display:none" onchange="uploadImage(this, ${i})"/>
@@ -368,7 +368,10 @@ function collectData() {
   const cards = document.querySelectorAll('.proj-card');
   const result = [];
   cards.forEach((card, i) => {
-    const get = field => (card.querySelector(`[data-field="${field}"]`)?.value || '').trim();
+  const get = field => {
+    const el = card.querySelector(`[data-field="${field}"]`);
+    return el ? (el.value || '').trim() : '';
+  };
     const details = [];
     card.querySelectorAll('[data-detail]').forEach(el => {
       const di = el.dataset.detail;
@@ -387,6 +390,31 @@ function collectData() {
     });
   });
   return result;
+}
+
+// ── 이미지 경로 직접 입력 시 미리보기 업데이트
+function updateImgPreview(input, cardIndex) {
+  const wrap = document.getElementById('imgWrap_' + cardIndex);
+  const existing = wrap.querySelector('.img-preview');
+  const empty = wrap.querySelector('.img-empty');
+  const val = input.value.trim();
+  if(val) {
+    if(existing) { existing.querySelector('img').src = val; existing.querySelector('.img-path').textContent = val; }
+    else {
+      if(empty) empty.remove();
+      const preview = document.createElement('div');
+      preview.className = 'img-preview';
+      preview.innerHTML = `<img src="${val}" alt="" onerror="this.style.display='none'"/><span class="img-path">${val}</span>`;
+      wrap.insertBefore(preview, input);
+    }
+  } else {
+    if(existing) existing.remove();
+    if(!wrap.querySelector('.img-empty')){
+      const e = document.createElement('span');
+      e.className = 'img-empty'; e.textContent = '이미지 없음';
+      wrap.insertBefore(e, input);
+    }
+  }
 }
 
 // ── PDF 업로드
